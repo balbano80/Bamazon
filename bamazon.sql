@@ -28,3 +28,9 @@ VALUES ("Sony PS4", "Electronics", 399.99, 20),
     ("Shaving cream", "Beauty and Health", 2.99, 60);
 
     -- SELECT * FROM products;
+
+CREATE TABLE departments(
+    department_id INT(11) NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(40) NOT NULL,
+    over_head_costs DECIMAL(10, 2) DEFAULT 0.00
+);

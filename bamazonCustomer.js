@@ -19,10 +19,10 @@ var connection = mysql.createConnection({
   });
 
 connection.connect(function(err) {
-    if (err){
-        throw err;
-    } 
+    if (err) throw err;
     // console.log("connected as id " + connection.threadId + "\n");
+    console.log("Welcome to Bamazon!!!".rainbow);
+    console.log("# # # # # # # # # # # ".rainbow)
     readDB();
   });  // establishes connection to database and fires off readDB function
 
@@ -56,16 +56,14 @@ function buyProducts(){
         }
     ]).then(function(response){
         quantityUpdate(response.product, parseInt(response.quantity));
-    })
+    });
 }; // asks user what item number they would like to purchase and the quantity
    // validates for both that they are a number and not negative
    // fires off quantityUpdate function with user's responses as arguments
 
 function readDB(){
     connection.query( "SELECT * FROM products", function(err, res){
-        if (err){
-            throw err;
-        }
+        if (err) throw err;
         var table = new AsciiTable("Products");
         table
             .setHeading("id", "Product Name", "Department Name", "Price", "Quantity");
