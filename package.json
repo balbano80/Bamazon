@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/balbano80/Bamazon#readme",
   "dependencies": {
+    "ascii-art": "^1.4.3",
+    "ascii-table": "0.0.9",
     "colors": "^1.3.0",
     "inquirer": "^5.2.0",
     "mysql": "^2.15.0"
