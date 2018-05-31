@@ -66,9 +66,9 @@ function readDB(){
         if (err) throw err;
         var table = new AsciiTable("Products");
         table
-            .setHeading("id", "Product Name", "Department Name", "Price", "Quantity");
+            .setHeading("id", "Product Name", "Department Name", "Price", "Quantity", "Product Sales");
             for (var i = 0; i < res.length; i++){
-                table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);   
+                table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity, res[i].product_sales);   
             }
         console.log(table.toString());
         buyProducts();
@@ -77,9 +77,10 @@ function readDB(){
 }; // reads from DB, displays all content in terminal and fires off buyProducts function
 
 function quantityUpdate(id, quantity){
-    connection.query("SELECT stock_quantity, price FROM products WHERE item_id =?", [id], function(err, results){
+    connection.query("SELECT stock_quantity, price, product_sales FROM products WHERE item_id =?", [id], function(err, results){
         // console.log(results[0].stock_quantity);
         // console.log(results[0].price);
+        // console.log(results);
         if (quantity > results[0].stock_quantity){
             console.log("Insufficient Inventory!".red);
             console.log("Please try again from the below inventory.")
@@ -88,9 +89,10 @@ function quantityUpdate(id, quantity){
         }
         else{
             var newQuantity = results[0].stock_quantity - quantity;
+            var productSales = parseFloat(results[0].product_sales) + (quantity * results[0].price);
             totalPurchase += (quantity * results[0].price);
             plusTax = totalPurchase * 1.0875;
-            connection.query("UPDATE products SET stock_quantity=? WHERE item_id =?", [newQuantity, id], function(err, results){
+            connection.query("UPDATE products SET stock_quantity=?, product_sales=? WHERE item_id =?", [newQuantity, productSales, id], function(err, results){
                 if (err) throw err;
                 console.log("Purchase successful".green);
                  console.log("Total purchase(with tax): $" + plusTax.toFixed(2));

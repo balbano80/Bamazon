@@ -27,10 +27,23 @@ VALUES ("Sony PS4", "Electronics", 399.99, 20),
     ("Toothpaste(2 pack)", "Beauty and Health", 4.99, 90), 
     ("Shaving cream", "Beauty and Health", 2.99, 60);
 
-    -- SELECT * FROM products;
+-- SELECT * FROM products;
+ALTER TABLE products
+ADD product_sales DECIMAL(10, 2) DEFAULT 0.00;
+
+SELECT * FROM products;
 
 CREATE TABLE departments(
     department_id INT(11) NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(40) NOT NULL,
-    over_head_costs DECIMAL(10, 2) DEFAULT 0.00
+    over_head_costs DECIMAL(10, 2) DEFAULT 0.00,
+    PRIMARY KEY (department_id)
 );
+
+INSERT INTO  departments (department_name, over_head_costs)
+VALUES ("Electronics", 600.00), 
+       ("Grocery", 500.00),
+       ("Clothing", 700.00),
+       ("Beauty and Health", 450.00);
+
+SELECT * FROM departments;

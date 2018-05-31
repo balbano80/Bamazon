@@ -56,21 +56,21 @@ function menu(){
                 return 0;
         };
     });
-};
+};  // displays menu and runs appropriate function based on user selection
 
 function view(){
     connection.query( "SELECT * FROM products", function(err, res){
         if (err) throw err;
         var table = new AsciiTable("Products");
         table
-            .setHeading("id", "Product Name", "Department Name", "Price", "Quantity");
+            .setHeading("id", "Product Name", "Department Name", "Price", "Quantity", "Product Sales");
             for (var i = 0; i < res.length; i++){
-                table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);   
+                table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity, res[i].product_sales);   
             }
         console.log(table.toString());
         menu();
     });
-};
+}; // displays product table to user
 
 function lowInventory(){
     connection.query( "SELECT * FROM products WHERE stock_quantity<5", function(err, res){
@@ -79,7 +79,7 @@ function lowInventory(){
         if (res.length === 0){
             console.log("There are no products that currently have low inventory.")
             console.log("");
-        }
+        }  // returns message if no products have less than 5 items
         else{
             var table = new AsciiTable("Low Inventory");
             table
@@ -88,10 +88,10 @@ function lowInventory(){
                     table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);   
                 }
             console.log(table.toString());
-        }
+        } // if there are products with less than 5 items, display table of said products  
         menu();
     });
-};
+};  //returns and displays table of products that have less than 5 items in inventory
 
 function addInventory(){
     connection.query( "SELECT * FROM products", function(err, res){
@@ -102,7 +102,7 @@ function addInventory(){
             for (var i = 0; i < res.length; i++){
                 table.addRow(res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity);   
             }
-        console.log(table.toString());
+        console.log(table.toString()); // displaying table just for visual
         inquirer.prompt([
             {
                 type: "input",
@@ -115,7 +115,7 @@ function addInventory(){
                     else{
                         return false;
                     }
-                }
+                } // id selection with input validation
             },
             {
                 type: "input",
@@ -128,16 +128,12 @@ function addInventory(){
                     else{
                         return true;
                     }
-                }
+                } // number of items to add input with validation
             }
         ]).then(function(response){
             connection.query("SELECT stock_quantity FROM products WHERE item_id =?", [response.product], function(err, results){
-                // console.log(results);
-                // console.log(parseInt(results[0].stock_quantity));
-                // console.log(parseInt(response.quantity));
                 if (err) throw err;
                 var newQuantity = parseInt(results[0].stock_quantity) + parseInt(response.quantity);
-                // console.log("New Quantity: " + newQuantity);
                 connection.query("UPDATE products SET stock_quantity=? WHERE item_id =?", [newQuantity, response.product], function(err, results){
                     if (err) throw err;
                     console.log("Added " + response.product + " to stock of item with id " + response.product);
@@ -146,9 +142,9 @@ function addInventory(){
                 });
  
             });
-        });
+        }); // add number of input items to input product id 
     });
-};
+}; // add items of a product to inventory
 
 function addProduct(){
     inquirer.prompt([
@@ -156,12 +152,12 @@ function addProduct(){
             type: "input",
             name: "name",
             message: "Please enter the name of the product to add to inventory: "
-        },
+        },  // name of product input
         {
             type: "input",
             name: "department",
             message: "Please enter in the department of the product to add to inventory: "
-        },
+        }, // name of department of product to add input
         {
             type: "input",
             name: "price",
@@ -174,7 +170,7 @@ function addProduct(){
                     return false;
                 }
             }
-        },
+        }, // price of product to add input with number validation
         {
             type: "input",
             name: "quantity",
@@ -187,7 +183,7 @@ function addProduct(){
                     return false;
                 }
             }
-        }
+        } // number of items of product to add input with number validation
     ]).then(function(newItem){
         connection.query("INSERT INTO products SET ?",
             {
@@ -199,10 +195,10 @@ function addProduct(){
             function(err, res){
                 console.log(res.affectedRows + " Product inserted")
             }
-        )
+        ) // inserting into table
         menu();
     })
-}
+}; // add a new product to the product table
 
 
 
